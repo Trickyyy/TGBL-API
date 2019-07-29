@@ -15,6 +15,6 @@
     "express": "^4.17.1",
     "express-bearer-token": "^2.4.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.6.7"
+    "pg": "^7.12.0"
   }
 }
