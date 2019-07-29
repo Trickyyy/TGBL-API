@@ -27,4 +27,7 @@ module.exports = {
         };
         return data;
     },
+    fire: (db, query, params) => {
+        db.query(query, params);
+    }
 }
