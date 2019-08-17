@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 module.exports = {
     generate: (req, res, next) => {
         const { userId } = req.body;
-        console.log(req.body);
         if(!userId) {
             res.status(401).send({
                 success: false,
