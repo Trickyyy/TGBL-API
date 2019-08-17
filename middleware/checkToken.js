@@ -8,7 +8,7 @@ const checkToken = (req, res, next) => {
             msg: "No auth token specified"
         });
     };
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(authToken, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
             res.status(401).send({
                 success: false,
