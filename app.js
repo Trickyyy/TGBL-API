@@ -14,12 +14,9 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.use(routes);
+app.use(bearerToken());
 
-app.use(bearerToken({
-    signed: true,
-    secret: process.env.JWT_SECRET
-}));
+app.use(routes);
 
 app.locals.db = db;
 
