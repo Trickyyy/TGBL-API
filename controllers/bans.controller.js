@@ -7,24 +7,25 @@ module.exports = {
         const authToken = req.token;
         const decodedToken = req.decoded;
         */
-        const user = req.body.user;
-        if(!user) {
+        const identifier = req.body.identifier;
+        if(!identifier) {
             res.status(401).send({
                 success: false,
                 msg: "No user specified"
             });
         } else {
-            const isBanned = dbController.selectSingle(db, "SELECT * FROM bans WHERE identification = $1 AND isBanned = true;", user);
+            const isBanned = dbController.selectSingle(db, "SELECT * FROM bans WHERE identification = $1 AND isBanned = true;", [identifier]);
             if(isBanned) {
                 res.status(200).send({
                     success: true,
-                    isBanned = true,
-                    data: isBanned
+                    identifier: identifier,
+                    data: true
                 });
             } else {
                 res.status(200).send({
                     success: true,
-                    isBanned = false
+                    identifier: identifier,
+                    data: false
                 });
             };
         };
@@ -47,20 +48,14 @@ module.exports = {
         const authToken = req.token;
         const decodedToken = req.decoded;
         */
-        const user = req.body.user;
-        const banIssuer = req.body.banIssuer;
-        if(!user) {
+        const identifier = req.body.identifier;
+        if(!identifier) {
             res.status(401).send({
                 success: false,
                 msg: "No user specified"
             });
-        } else if(!banIssuer) {
-            res.status(401).send({
-                success: false,
-                msg: "No banIssuer specified"
-            });
         } else {
-            const alreadyBanned = dbController.selectSingle(db, "SELECT isBanned, expires FROM bans WHERE identification = $1;", user);
+            const alreadyBanned = dbController.selectSingle(db, "SELECT isBanned, expires FROM bans WHERE identification = $1;", [identifier]);
             if(alreadyBanned) {
                 res.status(400).send({
                     success: false,
@@ -68,11 +63,11 @@ module.exports = {
                     data: alreadyBanned
                 });
             } else {
-                dbController.fire(db, "INSERT INTO bans (identification, banIssuer, isBanned, expires) VALUES ($1, $2, true, null);", [user, banIssuer]);
+                dbController.fire(db, "INSERT INTO bans (identification, isBanned, expires) VALUES ($1, true, null);", [identifier]);
                 res.status(200).send({
                     success: true,
                     msg: "User has been banned",
-                    user: user
+                    user: identifier
                 });
             };
         };
