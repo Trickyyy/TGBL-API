@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const checkToken = require('../../../middleware/checkToken');
-const checkSuperUser = require('../../../middleware/checkSuperUser');
-router.use('/getBanned', checkToken, require('./getBanned'));
-router.use('/getBans', checkToken, require('./getBans'));
-router.use('/addBan', checkSuperUser, require('./addBan'));
+router.use('/isbanned', checkToken, require('./isbanned'));
+router.use('/getbans', checkToken, require('./getbans'));
+router.use('/add', checkToken, require('./add'));
 
 module.exports = router;
