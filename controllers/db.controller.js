@@ -1,33 +1,27 @@
 module.exports = {
-    selectSingle: (db, query, params = null) => {
-        let data;
+    selectSingle: async(db, query, params = null) => {
+        let res;
         if(params) {
-            db.query(query, [params], (err, res) => {
-                data = res.rows[0];
-            });
+            res = await db.query(query, params);
         }
         else {
-            db.query(query, (err, res) => {
-                data = res.rows[0];
-            });
+            res = await db.query(query);
         };
+        const data = res.rows[0];
         return data;
     },
-    selectSingle: (db, query, params = null) => {
-        let data;
+    selectMultiple: async(db, query, params = null) => {
+        let res;
         if(params) {
-            db.query(query, [params], (err, res) => {
-                data = res.rows;
-            });
+            res = await db.query(query, params);
         }
         else {
-            db.query(query, (err, res) => {
-                data = res.rows;
-            });
+            res = await db.query(query);
         };
+        const data = res.rows;
         return data;
     },
-    fire: (db, query, params) => {
-        db.query(query, params);
+    fire: async(db, query, params) => {
+        await db.query(query, params);
     }
 }

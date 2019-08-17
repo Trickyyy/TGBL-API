@@ -1,7 +1,7 @@
 const dbController = require('./db.controller');
 
 module.exports = {
-    getBanned: (req, res, next) => {
+    isBanned: async(req, res, next) => {
         const db = req.app.locals.db;
         /*
         const authToken = req.token;
@@ -14,7 +14,7 @@ module.exports = {
                 msg: "No user specified"
             });
         } else {
-            const isBanned = dbController.selectSingle(db, "SELECT * FROM bans WHERE identification = $1 AND isBanned = true;", [identifier]);
+            const isBanned = await dbController.selectSingle(db, "SELECT * FROM bans WHERE identification = $1 AND isBanned = true;", [identifier]);
             if(isBanned) {
                 res.status(200).send({
                     success: true,
@@ -30,19 +30,20 @@ module.exports = {
             };
         };
     },
-    getBans: (req, res, next) => {
+    getBans: async(req, res, next) => {
         const db = req.app.locals.db;
         /*
         const authToken = req.token;
         const decodedToken = req.decoded;
         */
-        const bansList = dbController.selectMultiple(db, "SELECT * FROM bans;");
+        
+        const bansList = await dbController.selectMultiple(db, "SELECT * FROM bans;");
         res.status(200).send({
             success: true,
             data: bansList
         });
     },
-    addBan: (req, res, next) => {
+    addBan: async(req, res, next) => {
         const db = req.app.locals.db;
         /*
         const authToken = req.token;
@@ -55,7 +56,7 @@ module.exports = {
                 msg: "No user specified"
             });
         } else {
-            const alreadyBanned = dbController.selectSingle(db, "SELECT isBanned, expires FROM bans WHERE identification = $1;", [identifier]);
+            const alreadyBanned = await dbController.selectSingle(db, "SELECT * FROM bans WHERE identification = $1;", [identifier]);
             if(alreadyBanned) {
                 res.status(400).send({
                     success: false,
@@ -63,7 +64,7 @@ module.exports = {
                     data: alreadyBanned
                 });
             } else {
-                dbController.fire(db, "INSERT INTO bans (identification, isBanned, expires) VALUES ($1, true, null);", [identifier]);
+                await dbController.fire(db, "INSERT INTO bans (identification, isBanned, expires) VALUES ($1, true, null);", [identifier]);
                 res.status(200).send({
                     success: true,
                     msg: "User has been banned",
